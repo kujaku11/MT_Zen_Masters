@@ -42,7 +42,8 @@ class Capturing(list):
 #==============================================================================
 def compute_mt_response(survey_dir, station='mt000', copy_date=None, 
                         birrp_exe=r"c:\MinGW32-xy\Peacock\birrp52\birrp52_3pcs6e9pts.exe", 
-                        ant_calibrations=r"c:\MT\Ant_calibrations"):
+                        ant_calibrations=r"c:\MT\Ant_calibrations",
+                        process_df_list=[256]):
     """
     This code will down load Z3D files from a Zen that is in SD Mode, 
     convert the Z3D files to ascii format, then process them for each
@@ -86,6 +87,10 @@ def compute_mt_response(survey_dir, station='mt000', copy_date=None,
                                need a calibration file named Ant2884_cal.csv
                                in which the data is freq,real,imaginary 
                                
+        **process_df_list** : list
+                              list of sampling rates to process
+                              
+                               
     Returns
     -----------------
         **rp_plot** : mtpy.imaging.plotnresponses object
@@ -123,7 +128,8 @@ def compute_mt_response(survey_dir, station='mt000', copy_date=None,
                                     station='mt010',
                                     copy_date='2015-05-22',
                                     birrp_exe=r"/home/bin/birrp52.exe",
-                                    ant_calibrations=r"/home/ant_calibrations")
+                                    ant_calibrations=r"/home/ant_calibrations",
+                                    process_df_list=[1024, 256])
     """
                         
     station_dir = os.path.join(survey_dir, station)
@@ -147,7 +153,7 @@ def compute_mt_response(survey_dir, station='mt000', copy_date=None,
         z2edi.birrp_exe = birrp_exe
         z2edi.coil_cal_path = ant_calibrations
         try:
-            rp = z2edi.process_data(df_list=[256])
+            rp = z2edi.process_data(df_list=process_df_list)
         except zen.mtex.MTpyError_inputarguments:
             print '==> Data not good!! Did not produce a proper .edi file' 
             et = time.time()
